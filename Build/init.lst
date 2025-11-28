@@ -1,0 +1,642 @@
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"init.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/init.c"
+  20              		.section	.text.ADC_Init,"ax",%progbits
+  21              		.align	1
+  22              		.global	ADC_Init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	ADC_Init:
+  28              	.LFB130:
+   1:Core/Src/init.c **** #include "init.h"
+   2:Core/Src/init.c ****     //  PA0 CLK PB3 DT - enc
+   3:Core/Src/init.c ****     // PB1 - potenc
+   4:Core/Src/init.c ****     // LED PE5, PE6, PE9, PE11, PE13, PE14
+   5:Core/Src/init.c **** 
+   6:Core/Src/init.c ****    void ADC_Init(void)
+   7:Core/Src/init.c **** {
+  29              		.loc 1 7 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+   8:Core/Src/init.c ****    
+   9:Core/Src/init.c ****   
+  10:Core/Src/init.c ****  // 1. Тактирование (A, B, E уже включены, ADC1 включен)
+  11:Core/Src/init.c ****     SET_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOEEN);
+  34              		.loc 1 11 5 view .LVU1
+  35 0000 204B     		ldr	r3, .L2
+  36 0002 1A6B     		ldr	r2, [r3, #48]
+  37 0004 42F01302 		orr	r2, r2, #19
+  38 0008 1A63     		str	r2, [r3, #48]
+  12:Core/Src/init.c ****     SET_BIT(RCC->APB2ENR, RCC_APB2ENR_ADC1EN);
+  39              		.loc 1 12 5 view .LVU2
+  40 000a 5A6C     		ldr	r2, [r3, #68]
+  41 000c 42F48072 		orr	r2, r2, #256
+  42 0010 5A64     		str	r2, [r3, #68]
+  13:Core/Src/init.c **** 
+  14:Core/Src/init.c ****     // ================= НАСТРОЙКА GPIO =================
+  15:Core/Src/init.c ****     
+  16:Core/Src/init.c ****     // --- Потенциометр 1 (PB1) ---
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 2
+
+
+  17:Core/Src/init.c ****     MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER1, GPIO_MODER_MODER1); // Analog
+  43              		.loc 1 17 5 view .LVU3
+  44 0012 A3F55053 		sub	r3, r3, #13312
+  45 0016 1A68     		ldr	r2, [r3]
+  46 0018 42F00C02 		orr	r2, r2, #12
+  47 001c 1A60     		str	r2, [r3]
+  18:Core/Src/init.c ****     MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPDR1, 0);
+  48              		.loc 1 18 5 view .LVU4
+  49 001e DA68     		ldr	r2, [r3, #12]
+  50 0020 22F00C02 		bic	r2, r2, #12
+  51 0024 DA60     		str	r2, [r3, #12]
+  19:Core/Src/init.c **** 
+  20:Core/Src/init.c ****     // --- Потенциометр 2 (PA3) ---
+  21:Core/Src/init.c ****     MODIFY_REG(GPIOA->MODER, GPIO_MODER_MODER3, GPIO_MODER_MODER3); // Analog (11)
+  52              		.loc 1 21 5 view .LVU5
+  53 0026 A3F58063 		sub	r3, r3, #1024
+  54 002a 1A68     		ldr	r2, [r3]
+  55 002c 42F0C002 		orr	r2, r2, #192
+  56 0030 1A60     		str	r2, [r3]
+  22:Core/Src/init.c ****     MODIFY_REG(GPIOA->PUPDR, GPIO_PUPDR_PUPDR3, 0);
+  57              		.loc 1 22 5 view .LVU6
+  58 0032 DA68     		ldr	r2, [r3, #12]
+  59 0034 22F0C002 		bic	r2, r2, #192
+  60 0038 DA60     		str	r2, [r3, #12]
+  23:Core/Src/init.c **** 
+  24:Core/Src/init.c ****     // --- Потенциометр 3 (PA4) ---
+  25:Core/Src/init.c ****     MODIFY_REG(GPIOA->MODER, GPIO_MODER_MODER4, GPIO_MODER_MODER4); // Analog (11)
+  61              		.loc 1 25 5 view .LVU7
+  62 003a 1A68     		ldr	r2, [r3]
+  63 003c 42F44072 		orr	r2, r2, #768
+  64 0040 1A60     		str	r2, [r3]
+  26:Core/Src/init.c ****     MODIFY_REG(GPIOA->PUPDR, GPIO_PUPDR_PUPDR4, 0);
+  65              		.loc 1 26 5 view .LVU8
+  66 0042 DA68     		ldr	r2, [r3, #12]
+  67 0044 22F44072 		bic	r2, r2, #768
+  68 0048 DA60     		str	r2, [r3, #12]
+  27:Core/Src/init.c **** 
+  28:Core/Src/init.c **** 
+  29:Core/Src/init.c ****     // ================= НАСТРОЙКА ADC =================
+  30:Core/Src/init.c ****     
+  31:Core/Src/init.c ****     CLEAR_BIT(ADC1->CR2, ADC_CR2_ADON); // Выключаем для настройки
+  69              		.loc 1 31 5 view .LVU9
+  70 004a 0F4A     		ldr	r2, .L2+4
+  71 004c 9368     		ldr	r3, [r2, #8]
+  72 004e 23F00103 		bic	r3, r3, #1
+  73 0052 9360     		str	r3, [r2, #8]
+  32:Core/Src/init.c ****     
+  33:Core/Src/init.c ****     SET_BIT(ADC->CCR, ADC_CCR_ADCPRE_0); // Делитель частоты /4
+  74              		.loc 1 33 5 view .LVU10
+  75 0054 0D49     		ldr	r1, .L2+8
+  76 0056 4B68     		ldr	r3, [r1, #4]
+  77 0058 43F48033 		orr	r3, r3, #65536
+  78 005c 4B60     		str	r3, [r1, #4]
+  34:Core/Src/init.c **** 
+  35:Core/Src/init.c ****     // Настройка длины последовательности
+  36:Core/Src/init.c ****     // Мы будем читать по одному каналу вручную, поэтому L
+  37:Core/Src/init.c ****     MODIFY_REG(ADC1->SQR1, ADC_SQR1_L, 0); 
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 3
+
+
+  79              		.loc 1 37 5 view .LVU11
+  80 005e D36A     		ldr	r3, [r2, #44]
+  81 0060 23F47003 		bic	r3, r3, #15728640
+  82 0064 D362     		str	r3, [r2, #44]
+  38:Core/Src/init.c **** 
+  39:Core/Src/init.c ****     // Настройка времени выборки (Sampling Time) для всех канал�
+  40:Core/Src/init.c ****     // Канал 9 (PB1), Канал 3 (PA3), Канал 4 (PA4) - все они в регистр
+  41:Core/Src/init.c ****     // Ставим 84 цикла (4 -> 100) для стабильности
+  42:Core/Src/init.c ****     MODIFY_REG(ADC1->SMPR2, 
+  83              		.loc 1 42 5 view .LVU12
+  84 0066 1369     		ldr	r3, [r2, #16]
+  85 0068 23F06053 		bic	r3, r3, #939524096
+  86 006c 23F4FC43 		bic	r3, r3, #32256
+  87 0070 43F00053 		orr	r3, r3, #536870912
+  88 0074 43F49043 		orr	r3, r3, #18432
+  89 0078 1361     		str	r3, [r2, #16]
+  43:Core/Src/init.c ****                ADC_SMPR2_SMP9 | ADC_SMPR2_SMP3 | ADC_SMPR2_SMP4, 
+  44:Core/Src/init.c ****                (4 << ADC_SMPR2_SMP9_Pos) | (4 << ADC_SMPR2_SMP3_Pos) | (4 << ADC_SMPR2_SMP4_Pos));
+  45:Core/Src/init.c **** 
+  46:Core/Src/init.c ****     SET_BIT(ADC1->CR2, ADC_CR2_ADON); // Включаем АЦП
+  90              		.loc 1 46 5 view .LVU13
+  91 007a 9368     		ldr	r3, [r2, #8]
+  92 007c 43F00103 		orr	r3, r3, #1
+  93 0080 9360     		str	r3, [r2, #8]
+  47:Core/Src/init.c **** 
+  48:Core/Src/init.c **** }
+  94              		.loc 1 48 1 is_stmt 0 view .LVU14
+  95 0082 7047     		bx	lr
+  96              	.L3:
+  97              		.align	2
+  98              	.L2:
+  99 0084 00380240 		.word	1073887232
+ 100 0088 00200140 		.word	1073815552
+ 101 008c 00230140 		.word	1073816320
+ 102              		.cfi_endproc
+ 103              	.LFE130:
+ 105              		.section	.text.ADC_Read_Channel,"ax",%progbits
+ 106              		.align	1
+ 107              		.global	ADC_Read_Channel
+ 108              		.syntax unified
+ 109              		.thumb
+ 110              		.thumb_func
+ 112              	ADC_Read_Channel:
+ 113              	.LVL0:
+ 114              	.LFB131:
+  49:Core/Src/init.c **** 
+  50:Core/Src/init.c **** uint16_t ADC_Read_Channel(uint8_t channel)
+  51:Core/Src/init.c **** {
+ 115              		.loc 1 51 1 is_stmt 1 view -0
+ 116              		.cfi_startproc
+ 117              		@ args = 0, pretend = 0, frame = 0
+ 118              		@ frame_needed = 0, uses_anonymous_args = 0
+ 119              		@ link register save eliminated.
+  52:Core/Src/init.c ****     // 1. Выбираем канал
+  53:Core/Src/init.c ****     MODIFY_REG(ADC1->SQR3, ADC_SQR3_SQ1, channel << ADC_SQR3_SQ1_Pos);
+ 120              		.loc 1 53 5 view .LVU16
+ 121 0000 0E4A     		ldr	r2, .L7
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 4
+
+
+ 122 0002 536B     		ldr	r3, [r2, #52]
+ 123 0004 23F01F03 		bic	r3, r3, #31
+ 124 0008 0343     		orrs	r3, r3, r0
+ 125 000a 5363     		str	r3, [r2, #52]
+  54:Core/Src/init.c ****     
+  55:Core/Src/init.c ****     // 2. Холостое измерение (чтобы сбросить старый заряд)
+  56:Core/Src/init.c ****     SET_BIT(ADC1->CR2, ADC_CR2_SWSTART);
+ 126              		.loc 1 56 5 view .LVU17
+ 127 000c 9368     		ldr	r3, [r2, #8]
+ 128 000e 43F08043 		orr	r3, r3, #1073741824
+ 129 0012 9360     		str	r3, [r2, #8]
+  57:Core/Src/init.c ****     while(!(READ_BIT(ADC1->SR, ADC_SR_EOC)));
+ 130              		.loc 1 57 5 view .LVU18
+ 131              	.L5:
+ 132              		.loc 1 57 11 discriminator 1 view .LVU19
+ 133              		.loc 1 57 13 is_stmt 0 discriminator 1 view .LVU20
+ 134 0014 094B     		ldr	r3, .L7
+ 135 0016 1B68     		ldr	r3, [r3]
+ 136              		.loc 1 57 11 discriminator 1 view .LVU21
+ 137 0018 13F0020F 		tst	r3, #2
+ 138 001c FAD0     		beq	.L5
+  58:Core/Src/init.c ****     (void)ADC1->DR; // Читаем и выбрасываем
+ 139              		.loc 1 58 5 is_stmt 1 view .LVU22
+ 140 001e 074B     		ldr	r3, .L7
+ 141 0020 DA6C     		ldr	r2, [r3, #76]
+  59:Core/Src/init.c ****     
+  60:Core/Src/init.c ****     // 3. Настоящее измерение
+  61:Core/Src/init.c ****     SET_BIT(ADC1->CR2, ADC_CR2_SWSTART);
+ 142              		.loc 1 61 5 view .LVU23
+ 143 0022 9A68     		ldr	r2, [r3, #8]
+ 144 0024 42F08042 		orr	r2, r2, #1073741824
+ 145 0028 9A60     		str	r2, [r3, #8]
+  62:Core/Src/init.c ****     while(!(READ_BIT(ADC1->SR, ADC_SR_EOC)));
+ 146              		.loc 1 62 5 view .LVU24
+ 147              	.L6:
+ 148              		.loc 1 62 11 discriminator 1 view .LVU25
+ 149              		.loc 1 62 13 is_stmt 0 discriminator 1 view .LVU26
+ 150 002a 044B     		ldr	r3, .L7
+ 151 002c 1B68     		ldr	r3, [r3]
+ 152              		.loc 1 62 11 discriminator 1 view .LVU27
+ 153 002e 13F0020F 		tst	r3, #2
+ 154 0032 FAD0     		beq	.L6
+  63:Core/Src/init.c ****     
+  64:Core/Src/init.c ****     return ADC1->DR; // Возвращаем точный результат
+ 155              		.loc 1 64 5 is_stmt 1 view .LVU28
+ 156              		.loc 1 64 16 is_stmt 0 view .LVU29
+ 157 0034 014B     		ldr	r3, .L7
+ 158 0036 D86C     		ldr	r0, [r3, #76]
+ 159              	.LVL1:
+  65:Core/Src/init.c **** }
+ 160              		.loc 1 65 1 view .LVU30
+ 161 0038 80B2     		uxth	r0, r0
+ 162 003a 7047     		bx	lr
+ 163              	.L8:
+ 164              		.align	2
+ 165              	.L7:
+ 166 003c 00200140 		.word	1073815552
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 5
+
+
+ 167              		.cfi_endproc
+ 168              	.LFE131:
+ 170              		.section	.text.FAN_BUZZER_Init,"ax",%progbits
+ 171              		.align	1
+ 172              		.global	FAN_BUZZER_Init
+ 173              		.syntax unified
+ 174              		.thumb
+ 175              		.thumb_func
+ 177              	FAN_BUZZER_Init:
+ 178              	.LFB132:
+  66:Core/Src/init.c **** 
+  67:Core/Src/init.c **** void FAN_BUZZER_Init(void)
+  68:Core/Src/init.c **** {
+ 179              		.loc 1 68 1 is_stmt 1 view -0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183              		@ link register save eliminated.
+  69:Core/Src/init.c ****     // 1. Включаем тактирование TIM3 и GPIOB
+  70:Core/Src/init.c ****     // (GPIOB может быть уже включен, но повтор безопасен)
+  71:Core/Src/init.c ****     SET_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIOBEN);
+ 184              		.loc 1 71 5 view .LVU32
+ 185 0000 254B     		ldr	r3, .L10
+ 186 0002 1A6B     		ldr	r2, [r3, #48]
+ 187 0004 42F00202 		orr	r2, r2, #2
+ 188 0008 1A63     		str	r2, [r3, #48]
+  72:Core/Src/init.c ****     SET_BIT(RCC->APB1ENR, RCC_APB1ENR_TIM3EN); // TIM3 сидит на APB1 (45/90 MHz)
+ 189              		.loc 1 72 5 view .LVU33
+ 190 000a 1A6C     		ldr	r2, [r3, #64]
+ 191 000c 42F00202 		orr	r2, r2, #2
+ 192 0010 1A64     		str	r2, [r3, #64]
+  73:Core/Src/init.c **** 
+  74:Core/Src/init.c ****     // ================= НАСТРОЙКА GPIO (PB4, PB5) =================
+  75:Core/Src/init.c ****     
+  76:Core/Src/init.c ****     // Очистка режимов для PB4 и PB5
+  77:Core/Src/init.c ****     GPIOB->MODER &= ~(GPIO_MODER_MODE4 | GPIO_MODER_MODE5);
+ 193              		.loc 1 77 5 view .LVU34
+ 194              		.loc 1 77 10 is_stmt 0 view .LVU35
+ 195 0012 A3F55053 		sub	r3, r3, #13312
+ 196 0016 1A68     		ldr	r2, [r3]
+ 197              		.loc 1 77 18 view .LVU36
+ 198 0018 22F47062 		bic	r2, r2, #3840
+ 199 001c 1A60     		str	r2, [r3]
+  78:Core/Src/init.c ****     
+  79:Core/Src/init.c ****     // Установка режима Alternate Function (10)
+  80:Core/Src/init.c ****     GPIOB->MODER |= (GPIO_MODER_MODE4_1 | GPIO_MODER_MODE5_1);
+ 200              		.loc 1 80 5 is_stmt 1 view .LVU37
+ 201              		.loc 1 80 10 is_stmt 0 view .LVU38
+ 202 001e 1A68     		ldr	r2, [r3]
+ 203              		.loc 1 80 18 view .LVU39
+ 204 0020 42F42062 		orr	r2, r2, #2560
+ 205 0024 1A60     		str	r2, [r3]
+  81:Core/Src/init.c **** 
+  82:Core/Src/init.c ****     // Настройка AF2 (TIM3) для PB4 и PB5
+  83:Core/Src/init.c ****     // AF2 = 0x02. Записываем в AFRL (т.к. пины 0-7)
+  84:Core/Src/init.c ****     
+  85:Core/Src/init.c ****     // PB4
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 6
+
+
+  86:Core/Src/init.c ****     GPIOB->AFR[0] &= ~(GPIO_AFRL_AFSEL4);          // Очистка
+ 206              		.loc 1 86 5 is_stmt 1 view .LVU40
+ 207              		.loc 1 86 15 is_stmt 0 view .LVU41
+ 208 0026 1A6A     		ldr	r2, [r3, #32]
+ 209              		.loc 1 86 19 view .LVU42
+ 210 0028 22F47022 		bic	r2, r2, #983040
+ 211 002c 1A62     		str	r2, [r3, #32]
+  87:Core/Src/init.c ****     GPIOB->AFR[0] |= (0x2 << GPIO_AFRL_AFSEL4_Pos); // AF2
+ 212              		.loc 1 87 5 is_stmt 1 view .LVU43
+ 213              		.loc 1 87 15 is_stmt 0 view .LVU44
+ 214 002e 1A6A     		ldr	r2, [r3, #32]
+ 215              		.loc 1 87 19 view .LVU45
+ 216 0030 42F40032 		orr	r2, r2, #131072
+ 217 0034 1A62     		str	r2, [r3, #32]
+  88:Core/Src/init.c **** 
+  89:Core/Src/init.c ****     // PB5
+  90:Core/Src/init.c ****     GPIOB->AFR[0] &= ~(GPIO_AFRL_AFSEL5);          // Очистка
+ 218              		.loc 1 90 5 is_stmt 1 view .LVU46
+ 219              		.loc 1 90 15 is_stmt 0 view .LVU47
+ 220 0036 1A6A     		ldr	r2, [r3, #32]
+ 221              		.loc 1 90 19 view .LVU48
+ 222 0038 22F47002 		bic	r2, r2, #15728640
+ 223 003c 1A62     		str	r2, [r3, #32]
+  91:Core/Src/init.c ****     GPIOB->AFR[0] |= (0x2 << GPIO_AFRL_AFSEL5_Pos); // AF2
+ 224              		.loc 1 91 5 is_stmt 1 view .LVU49
+ 225              		.loc 1 91 15 is_stmt 0 view .LVU50
+ 226 003e 1A6A     		ldr	r2, [r3, #32]
+ 227              		.loc 1 91 19 view .LVU51
+ 228 0040 42F40012 		orr	r2, r2, #2097152
+ 229 0044 1A62     		str	r2, [r3, #32]
+  92:Core/Src/init.c **** 
+  93:Core/Src/init.c ****     // ================= НАСТРОЙКА TIM3 =================
+  94:Core/Src/init.c ****     
+  95:Core/Src/init.c ****     // Настройка частоты таймера
+  96:Core/Src/init.c ****     // APB1 Clock = 45 MHz (обычно на F429). Таймеры x2 = 90 MHz.
+  97:Core/Src/init.c ****     // Сделаем так, чтобы 1 тик = 1 мкс (1 МГц)
+  98:Core/Src/init.c ****     TIM3->PSC = 89; // (90 MHz / (89+1)) = 1 MHz
+ 230              		.loc 1 98 5 is_stmt 1 view .LVU52
+ 231              		.loc 1 98 15 is_stmt 0 view .LVU53
+ 232 0046 A3F50033 		sub	r3, r3, #131072
+ 233 004a 5922     		movs	r2, #89
+ 234 004c 9A62     		str	r2, [r3, #40]
+  99:Core/Src/init.c ****     
+ 100:Core/Src/init.c ****     TIM3->ARR = 1000; // Дефолтный период = 1000 мкс (1 кГц)
+ 235              		.loc 1 100 5 is_stmt 1 view .LVU54
+ 236              		.loc 1 100 15 is_stmt 0 view .LVU55
+ 237 004e 4FF47A72 		mov	r2, #1000
+ 238 0052 DA62     		str	r2, [r3, #44]
+ 101:Core/Src/init.c **** 
+ 102:Core/Src/init.c ****     // --- Канал 1 (Вентилятор) - ШИМ Mode 1 ---
+ 103:Core/Src/init.c ****     TIM3->CCMR1 &= ~TIM_CCMR1_OC1M; 
+ 239              		.loc 1 103 5 is_stmt 1 view .LVU56
+ 240              		.loc 1 103 9 is_stmt 0 view .LVU57
+ 241 0054 9A69     		ldr	r2, [r3, #24]
+ 242              		.loc 1 103 17 view .LVU58
+ 243 0056 22F07002 		bic	r2, r2, #112
+ 244 005a 9A61     		str	r2, [r3, #24]
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 7
+
+
+ 104:Core/Src/init.c ****     TIM3->CCMR1 |= (0x6 << TIM_CCMR1_OC1M_Pos); // PWM Mode 1
+ 245              		.loc 1 104 5 is_stmt 1 view .LVU59
+ 246              		.loc 1 104 9 is_stmt 0 view .LVU60
+ 247 005c 9A69     		ldr	r2, [r3, #24]
+ 248              		.loc 1 104 17 view .LVU61
+ 249 005e 42F06002 		orr	r2, r2, #96
+ 250 0062 9A61     		str	r2, [r3, #24]
+ 105:Core/Src/init.c ****     TIM3->CCMR1 |= TIM_CCMR1_OC1PE;             // Preload Enable
+ 251              		.loc 1 105 5 is_stmt 1 view .LVU62
+ 252              		.loc 1 105 9 is_stmt 0 view .LVU63
+ 253 0064 9A69     		ldr	r2, [r3, #24]
+ 254              		.loc 1 105 17 view .LVU64
+ 255 0066 42F00802 		orr	r2, r2, #8
+ 256 006a 9A61     		str	r2, [r3, #24]
+ 106:Core/Src/init.c ****     
+ 107:Core/Src/init.c ****     // --- Канал 2 (Бипер) - ШИМ Mode 1 ---
+ 108:Core/Src/init.c ****     TIM3->CCMR1 &= ~TIM_CCMR1_OC2M;
+ 257              		.loc 1 108 5 is_stmt 1 view .LVU65
+ 258              		.loc 1 108 9 is_stmt 0 view .LVU66
+ 259 006c 9A69     		ldr	r2, [r3, #24]
+ 260              		.loc 1 108 17 view .LVU67
+ 261 006e 22F4E042 		bic	r2, r2, #28672
+ 262 0072 9A61     		str	r2, [r3, #24]
+ 109:Core/Src/init.c ****     TIM3->CCMR1 |= (0x6 << TIM_CCMR1_OC2M_Pos); // PWM Mode 1
+ 263              		.loc 1 109 5 is_stmt 1 view .LVU68
+ 264              		.loc 1 109 9 is_stmt 0 view .LVU69
+ 265 0074 9A69     		ldr	r2, [r3, #24]
+ 266              		.loc 1 109 17 view .LVU70
+ 267 0076 42F4C042 		orr	r2, r2, #24576
+ 268 007a 9A61     		str	r2, [r3, #24]
+ 110:Core/Src/init.c ****     TIM3->CCMR1 |= TIM_CCMR1_OC2PE;             // Preload Enable
+ 269              		.loc 1 110 5 is_stmt 1 view .LVU71
+ 270              		.loc 1 110 9 is_stmt 0 view .LVU72
+ 271 007c 9A69     		ldr	r2, [r3, #24]
+ 272              		.loc 1 110 17 view .LVU73
+ 273 007e 42F40062 		orr	r2, r2, #2048
+ 274 0082 9A61     		str	r2, [r3, #24]
+ 111:Core/Src/init.c **** 
+ 112:Core/Src/init.c ****     // Включение выходов
+ 113:Core/Src/init.c ****     SET_BIT(TIM3->CCER, TIM_CCER_CC1E | TIM_CCER_CC2E);
+ 275              		.loc 1 113 5 is_stmt 1 view .LVU74
+ 276 0084 1A6A     		ldr	r2, [r3, #32]
+ 277 0086 42F01102 		orr	r2, r2, #17
+ 278 008a 1A62     		str	r2, [r3, #32]
+ 114:Core/Src/init.c ****     
+ 115:Core/Src/init.c ****     // Запуск таймера
+ 116:Core/Src/init.c ****     SET_BIT(TIM3->CR1, TIM_CR1_ARPE | TIM_CR1_CEN);
+ 279              		.loc 1 116 5 view .LVU75
+ 280 008c 1A68     		ldr	r2, [r3]
+ 281 008e 42F08102 		orr	r2, r2, #129
+ 282 0092 1A60     		str	r2, [r3]
+ 117:Core/Src/init.c **** }
+ 283              		.loc 1 117 1 is_stmt 0 view .LVU76
+ 284 0094 7047     		bx	lr
+ 285              	.L11:
+ 286 0096 00BF     		.align	2
+ 287              	.L10:
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 8
+
+
+ 288 0098 00380240 		.word	1073887232
+ 289              		.cfi_endproc
+ 290              	.LFE132:
+ 292              		.section	.text.read_POT1,"ax",%progbits
+ 293              		.align	1
+ 294              		.global	read_POT1
+ 295              		.syntax unified
+ 296              		.thumb
+ 297              		.thumb_func
+ 299              	read_POT1:
+ 300              	.LFB133:
+ 118:Core/Src/init.c **** 
+ 119:Core/Src/init.c **** 
+ 120:Core/Src/init.c **** uint16_t read_POT1(void)
+ 121:Core/Src/init.c **** {
+ 301              		.loc 1 121 1 is_stmt 1 view -0
+ 302              		.cfi_startproc
+ 303              		@ args = 0, pretend = 0, frame = 0
+ 304              		@ frame_needed = 0, uses_anonymous_args = 0
+ 305              		@ link register save eliminated.
+ 122:Core/Src/init.c ****     // Настраиваем одно преобразование на канале 0
+ 123:Core/Src/init.c ****     MODIFY_REG(ADC1->SQR3, ADC_SQR3_SQ1_Msk, 0 << ADC_SQR3_SQ1_Pos);
+ 306              		.loc 1 123 5 view .LVU78
+ 307 0000 084B     		ldr	r3, .L14
+ 308 0002 5A6B     		ldr	r2, [r3, #52]
+ 309 0004 22F01F02 		bic	r2, r2, #31
+ 310 0008 5A63     		str	r2, [r3, #52]
+ 124:Core/Src/init.c ****     
+ 125:Core/Src/init.c ****     // Запускаем преобразование
+ 126:Core/Src/init.c ****     SET_BIT(ADC1->CR2, ADC_CR2_SWSTART);
+ 311              		.loc 1 126 5 view .LVU79
+ 312 000a 9A68     		ldr	r2, [r3, #8]
+ 313 000c 42F08042 		orr	r2, r2, #1073741824
+ 314 0010 9A60     		str	r2, [r3, #8]
+ 127:Core/Src/init.c ****     
+ 128:Core/Src/init.c ****     // Ждем завершения
+ 129:Core/Src/init.c ****     while (!(ADC1->SR & ADC_SR_EOC));
+ 315              		.loc 1 129 5 view .LVU80
+ 316              	.L13:
+ 317              		.loc 1 129 12 discriminator 1 view .LVU81
+ 318              		.loc 1 129 18 is_stmt 0 discriminator 1 view .LVU82
+ 319 0012 044B     		ldr	r3, .L14
+ 320 0014 1B68     		ldr	r3, [r3]
+ 321              		.loc 1 129 12 discriminator 1 view .LVU83
+ 322 0016 13F0020F 		tst	r3, #2
+ 323 001a FAD0     		beq	.L13
+ 130:Core/Src/init.c ****     
+ 131:Core/Src/init.c ****     // Читаем результат
+ 132:Core/Src/init.c ****     return ADC1->DR;
+ 324              		.loc 1 132 5 is_stmt 1 view .LVU84
+ 325              		.loc 1 132 16 is_stmt 0 view .LVU85
+ 326 001c 014B     		ldr	r3, .L14
+ 327 001e D86C     		ldr	r0, [r3, #76]
+ 133:Core/Src/init.c **** }
+ 328              		.loc 1 133 1 view .LVU86
+ 329 0020 80B2     		uxth	r0, r0
+ 330 0022 7047     		bx	lr
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 9
+
+
+ 331              	.L15:
+ 332              		.align	2
+ 333              	.L14:
+ 334 0024 00200140 		.word	1073815552
+ 335              		.cfi_endproc
+ 336              	.LFE133:
+ 338              		.section	.text.read_POT2,"ax",%progbits
+ 339              		.align	1
+ 340              		.global	read_POT2
+ 341              		.syntax unified
+ 342              		.thumb
+ 343              		.thumb_func
+ 345              	read_POT2:
+ 346              	.LFB134:
+ 134:Core/Src/init.c **** 
+ 135:Core/Src/init.c **** // Функция для чтения POT2 (PA1, канал 1)
+ 136:Core/Src/init.c **** uint16_t read_POT2(void)
+ 137:Core/Src/init.c **** {
+ 347              		.loc 1 137 1 is_stmt 1 view -0
+ 348              		.cfi_startproc
+ 349              		@ args = 0, pretend = 0, frame = 0
+ 350              		@ frame_needed = 0, uses_anonymous_args = 0
+ 351              		@ link register save eliminated.
+ 138:Core/Src/init.c ****     // Настраиваем одно преобразование на канале 1
+ 139:Core/Src/init.c ****     MODIFY_REG(ADC1->SQR3, ADC_SQR3_SQ1_Msk, 1 << ADC_SQR3_SQ1_Pos);
+ 352              		.loc 1 139 5 view .LVU88
+ 353 0000 094A     		ldr	r2, .L18
+ 354 0002 536B     		ldr	r3, [r2, #52]
+ 355 0004 23F01F03 		bic	r3, r3, #31
+ 356 0008 43F00103 		orr	r3, r3, #1
+ 357 000c 5363     		str	r3, [r2, #52]
+ 140:Core/Src/init.c ****     
+ 141:Core/Src/init.c ****     // Запускаем преобразование
+ 142:Core/Src/init.c ****     SET_BIT(ADC1->CR2, ADC_CR2_SWSTART);
+ 358              		.loc 1 142 5 view .LVU89
+ 359 000e 9368     		ldr	r3, [r2, #8]
+ 360 0010 43F08043 		orr	r3, r3, #1073741824
+ 361 0014 9360     		str	r3, [r2, #8]
+ 143:Core/Src/init.c ****     
+ 144:Core/Src/init.c ****     // Ждем завершения
+ 145:Core/Src/init.c ****     while (!(ADC1->SR & ADC_SR_EOC));
+ 362              		.loc 1 145 5 view .LVU90
+ 363              	.L17:
+ 364              		.loc 1 145 12 discriminator 1 view .LVU91
+ 365              		.loc 1 145 18 is_stmt 0 discriminator 1 view .LVU92
+ 366 0016 044B     		ldr	r3, .L18
+ 367 0018 1B68     		ldr	r3, [r3]
+ 368              		.loc 1 145 12 discriminator 1 view .LVU93
+ 369 001a 13F0020F 		tst	r3, #2
+ 370 001e FAD0     		beq	.L17
+ 146:Core/Src/init.c ****     
+ 147:Core/Src/init.c ****     // Читаем результат
+ 148:Core/Src/init.c ****     return ADC1->DR;
+ 371              		.loc 1 148 5 is_stmt 1 view .LVU94
+ 372              		.loc 1 148 16 is_stmt 0 view .LVU95
+ 373 0020 014B     		ldr	r3, .L18
+ 374 0022 D86C     		ldr	r0, [r3, #76]
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 10
+
+
+ 149:Core/Src/init.c **** }
+ 375              		.loc 1 149 1 view .LVU96
+ 376 0024 80B2     		uxth	r0, r0
+ 377 0026 7047     		bx	lr
+ 378              	.L19:
+ 379              		.align	2
+ 380              	.L18:
+ 381 0028 00200140 		.word	1073815552
+ 382              		.cfi_endproc
+ 383              	.LFE134:
+ 385              		.section	.text.read_POT3,"ax",%progbits
+ 386              		.align	1
+ 387              		.global	read_POT3
+ 388              		.syntax unified
+ 389              		.thumb
+ 390              		.thumb_func
+ 392              	read_POT3:
+ 393              	.LFB135:
+ 150:Core/Src/init.c **** 
+ 151:Core/Src/init.c **** // Функция для чтения POT3 (PA2, канал 2)
+ 152:Core/Src/init.c **** uint16_t read_POT3(void)
+ 153:Core/Src/init.c **** {
+ 394              		.loc 1 153 1 is_stmt 1 view -0
+ 395              		.cfi_startproc
+ 396              		@ args = 0, pretend = 0, frame = 0
+ 397              		@ frame_needed = 0, uses_anonymous_args = 0
+ 398              		@ link register save eliminated.
+ 154:Core/Src/init.c ****     // Настраиваем одно преобразование на канале 2
+ 155:Core/Src/init.c ****     
+ 156:Core/Src/init.c ****     
+ 157:Core/Src/init.c ****     // Запускаем преобразование
+ 158:Core/Src/init.c ****     SET_BIT(ADC1->CR2, ADC_CR2_SWSTART);
+ 399              		.loc 1 158 5 view .LVU98
+ 400 0000 064A     		ldr	r2, .L22
+ 401 0002 9368     		ldr	r3, [r2, #8]
+ 402 0004 43F08043 		orr	r3, r3, #1073741824
+ 403 0008 9360     		str	r3, [r2, #8]
+ 159:Core/Src/init.c ****     
+ 160:Core/Src/init.c ****     // Ждем завершения
+ 161:Core/Src/init.c ****     while (!(ADC1->SR & ADC_SR_EOC));
+ 404              		.loc 1 161 5 view .LVU99
+ 405              	.L21:
+ 406              		.loc 1 161 12 discriminator 1 view .LVU100
+ 407              		.loc 1 161 18 is_stmt 0 discriminator 1 view .LVU101
+ 408 000a 044B     		ldr	r3, .L22
+ 409 000c 1B68     		ldr	r3, [r3]
+ 410              		.loc 1 161 12 discriminator 1 view .LVU102
+ 411 000e 13F0020F 		tst	r3, #2
+ 412 0012 FAD0     		beq	.L21
+ 162:Core/Src/init.c ****     
+ 163:Core/Src/init.c ****     // Читаем результат
+ 164:Core/Src/init.c ****     return ADC1->DR;
+ 413              		.loc 1 164 5 is_stmt 1 view .LVU103
+ 414              		.loc 1 164 16 is_stmt 0 view .LVU104
+ 415 0014 014B     		ldr	r3, .L22
+ 416 0016 D86C     		ldr	r0, [r3, #76]
+ 165:Core/Src/init.c **** }...
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 11
+
+
+ 417              		.loc 1 165 1 view .LVU105
+ 418 0018 80B2     		uxth	r0, r0
+ 419 001a 7047     		bx	lr
+ 420              	.L23:
+ 421              		.align	2
+ 422              	.L22:
+ 423 001c 00200140 		.word	1073815552
+ 424              		.cfi_endproc
+ 425              	.LFE135:
+ 427              		.text
+ 428              	.Letext0:
+ 429              		.file 2 "C:/Tools/SysGCC/arm-none-eabi/include/machine/_default_types.h"
+ 430              		.file 3 "C:/Tools/SysGCC/arm-none-eabi/include/sys/_stdint.h"
+ 431              		.file 4 "Core/Inc/../../CMSIS/Devices/STM32F4xx/Inc/STM32F429ZI/stm32f429xx.h"
+ARM GAS  C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 init.c
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:21     .text.ADC_Init:00000000 $t
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:27     .text.ADC_Init:00000000 ADC_Init
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:99     .text.ADC_Init:00000084 $d
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:106    .text.ADC_Read_Channel:00000000 $t
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:112    .text.ADC_Read_Channel:00000000 ADC_Read_Channel
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:166    .text.ADC_Read_Channel:0000003c $d
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:171    .text.FAN_BUZZER_Init:00000000 $t
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:177    .text.FAN_BUZZER_Init:00000000 FAN_BUZZER_Init
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:288    .text.FAN_BUZZER_Init:00000098 $d
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:293    .text.read_POT1:00000000 $t
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:299    .text.read_POT1:00000000 read_POT1
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:334    .text.read_POT1:00000024 $d
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:339    .text.read_POT2:00000000 $t
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:345    .text.read_POT2:00000000 read_POT2
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:381    .text.read_POT2:00000028 $d
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:386    .text.read_POT3:00000000 $t
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:392    .text.read_POT3:00000000 read_POT3
+C:\Users\SIMONM~1\AppData\Local\Temp\ccswMXIx.s:423    .text.read_POT3:0000001c $d
+
+NO UNDEFINED SYMBOLS
